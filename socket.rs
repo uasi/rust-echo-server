@@ -22,39 +22,6 @@ export send_str;
 import core::ctypes::*;
 import core::result::{ok, err};
 
-import const_from_enum::*;
-
-mod const_from_enum {
-    #[cfg(target_os = "macos")]
-    fn AF_(af: addr_family) -> c_int {
-        ret alt af {
-            af_inet { 2 }
-            af_inet6 { 30 }
-        } as c_int;
-    }
-
-    #[cfg(target_os = "linux")]
-    fn AF_(af: addr_family) -> c_int {
-        ret alt af {
-            af_inet { 2 }
-            af_inet6 { 10 }
-        } as c_int;
-    }
-
-    fn SOCK_(st: socket_type) -> c_int {
-        ret alt st {
-            sock_stream { 1 }
-            sock_dgram { 2 }
-        } as c_int;
-    }
-
-    fn IPPROTO_(pt: protocol_type) -> c_int {
-        ret alt pt {
-            ipproto_ip { 0 }
-        } as c_int;
-    }
-}
-
 // FIXME: fill missing enums
 
 #[cfg(target_os = "macos")]
