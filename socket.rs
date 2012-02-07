@@ -112,13 +112,13 @@ fn new_sockaddr_in(af: addr_family, addr: u32, port: u16) -> sockaddr_in {
 }
 
 
-fn connect(s: socket, +a: sockaddr_in) -> result::t<int, int> {
+fn connect(s: socket, a: sockaddr_in) -> result::t<int, int> {
     let c_sock = *s;
     let r = libc::connect(c_sock, ptr::addr_of(a), 16 as uint32_t) as int;
     ret alt r { 0 { ok(r) } _ { err(r) } };
 }
 
-fn bind_(s: socket, +a: sockaddr_in) -> result::t<int, int> {
+fn bind_(s: socket, a: sockaddr_in) -> result::t<int, int> {
     let c_sock = *s;
     let r = libc::bind(c_sock, ptr::addr_of(a), 16 as uint32_t) as int;
     ret alt r { 0 { ok(r) } _ { err(r) } };
