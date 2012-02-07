@@ -57,18 +57,25 @@ mod const_from_enum {
 
 // FIXME: fill missing enums
 
+#[cfg(target_os = "macos")]
 enum addr_family {
-    af_inet,
-    af_inet6,
+    af_inet = 2,
+    af_inet6 = 26,
+}
+
+#[cfg(target_os = "linux")]
+enum addr_family {
+    af_inet = 2,
+    af_inet6 = 10,
 }
 
 enum socket_type {
-    sock_stream,
-    sock_dgram,
+    sock_stream = 1,
+    sock_dgram = 2,
 }
 
 enum protocol_type {
-    ipproto_ip,
+    ipproto_ip = 0,
 }
 
 type in_addr = {
@@ -110,7 +117,7 @@ fn new_socket(af: addr_family, st: socket_type, pt: protocol_type) -> socket {
     #[cfg(target_os = "linux")] // untested
     #[cfg(target_os = "macos")]
     fn _new_socket(af: addr_family, st: socket_type, pt: protocol_type) -> socket {
-        let s = libc::socket(AF_(af), SOCK_(st), IPPROTO_(pt));
+        let s = libc::socket(af as c_int, st as c_int, pt as c_int);
         ret socket(s);
     }
 }
@@ -129,7 +136,7 @@ fn new_sockaddr_in(af: addr_family, addr: u32, port: u16) -> sockaddr_in {
     fn _new_sockaddr_in(af: addr_family, addr: u32, port: u16) -> sockaddr_in {
         ret {
             mutable sin_len: 16 as u8,
-            mutable sin_family: AF_(af) as i8,
+            mutable sin_family: af as i8,
             mutable sin_port: libc::htons(port),
             mutable sin_addr: {s_addr: addr},
             mutable sin_zero: 0u64,
